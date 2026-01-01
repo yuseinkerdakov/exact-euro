@@ -8,18 +8,18 @@ A simple calculator to help Bulgarians during the Euro transition period. When y
 
 From January 1, 2026, Bulgaria uses the Euro. During the transition:
 
-- You can **pay** in both € and лв
+- You can **pay** in both € and leva
 - You get **change only in Euro**
 
-This creates confusion: _"I paid 20лв for an 8€ coffee... how much Euro change?"_
+This creates confusion: _"I paid 20 leva for an 8€ coffee... how much Euro change?"_
 
 ## Usage
 
-1. Enter the **price** (defaults to €, tap to switch to лв)
-2. Enter what you **paid** (defaults to лв, tap to switch to €)
+1. Enter the **price** (defaults to €, tap to switch to leva)
+2. Enter what you **paid** (defaults to leva, tap to switch to €)
 3. See your **change** in both currencies
 
-**Fixed rate:** €1 = 1.95583 лв
+**Fixed rate:** €1 = 1.95583 leva
 
 ## Run Locally
 
