@@ -1,4 +1,4 @@
-# 🇧🇬 Ресто Калкулатор 🇪🇺
+# 🇧🇬 🇪🇺 Ресто Калкулатор
 
 A simple calculator to help Bulgarians during the Euro transition period. When you pay in Leva but receive change in Euro, this app tells you exactly how much you should get back.
 
@@ -19,7 +19,7 @@ This creates confusion: _"I paid 20лв for an 8€ coffee... how much Euro chan
 2. Enter what you **paid** (defaults to лв, tap to switch to €)
 3. See your **change** in both currencies
 
-**Fixed rate:** 1 € = 1.95583 лв
+**Fixed rate:** €1 = 1.95583 лв
 
 ## Run Locally
 
