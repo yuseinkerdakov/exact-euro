@@ -118,3 +118,4 @@ export function parseAmount(input: string): number {
 
   return Math.max(0, parsed);
 }
+
