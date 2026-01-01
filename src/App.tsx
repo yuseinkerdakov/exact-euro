@@ -20,7 +20,7 @@ function App() {
             </span>{' '}
           </h1>
           <p className="mt-1.5 sm:mt-2 text-text-secondary text-sm sm:text-base md:text-lg">
-            Плащате в лева, получавате ресто в евро? Изчислете лесно!
+            Плащате в лева, получавате ресто в евро? <br/> Изчислете лесно!
           </p>
         </div>
       </header>
