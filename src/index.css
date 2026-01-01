@@ -1,0 +1,95 @@
+/* Import Google Fonts - must be first */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&display=swap');
+
+@import "tailwindcss";
+
+@theme {
+  /* Custom font - distinctive and readable */
+  --font-sans: "DM Sans", system-ui, sans-serif;
+  --font-display: "Fraunces", Georgia, serif;
+  
+  /* Bulgarian-inspired color palette with Euro gold accents */
+  --color-euro-gold: #FFD700;
+  --color-euro-gold-dark: #B8860B;
+  --color-lev-green: #00966E;
+  --color-lev-green-dark: #006B4F;
+  --color-bg-warm: #FEFBF6;
+  --color-bg-card: #FFFFFF;
+  --color-text-primary: #1A1A2E;
+  --color-text-secondary: #4A5568;
+  --color-border: #E2E8F0;
+  --color-border-focus: #00966E;
+  --color-error: #DC2626;
+  --color-success: #059669;
+}
+
+/* Base styles - responsive font sizing */
+html {
+  font-size: 16px;
+}
+
+@media (min-width: 640px) {
+  html {
+    font-size: 18px;
+  }
+}
+
+body {
+  font-family: var(--font-sans);
+  background: linear-gradient(135deg, var(--color-bg-warm) 0%, #FFF8E7 50%, #F0FDF4 100%);
+  min-height: 100vh;
+  min-height: 100dvh; /* Dynamic viewport height for mobile */
+  color: var(--color-text-primary);
+  overflow-x: hidden;
+}
+
+/* Custom input number styling - remove spinners */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+/* Prevent text overflow */
+input[type="text"] {
+  text-overflow: ellipsis;
+}
+
+/* Focus ring styling */
+.focus-ring {
+  @apply outline-none ring-2 ring-offset-2 ring-lev-green transition-shadow;
+}
+
+/* Smooth transitions - but not on everything to improve performance */
+button, a, input {
+  @apply transition-colors duration-200;
+}
+
+/* Selection color */
+::selection {
+  background-color: var(--color-euro-gold);
+  color: var(--color-text-primary);
+}
+
+/* Prevent horizontal overflow */
+#root {
+  overflow-x: hidden;
+  width: 100%;
+}
+
+/* Safe area insets for notched phones */
+@supports (padding: env(safe-area-inset-bottom)) {
+  body {
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+  
+  footer {
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+}

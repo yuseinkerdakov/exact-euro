@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00966E"/>
+      <stop offset="100%" style="stop-color:#006B4F"/>
+    </linearGradient>
+  </defs>
+  <!-- Background circle -->
+  <circle cx="50" cy="50" r="48" fill="url(#bg)"/>
+  <!-- Euro symbol -->
+  <text x="50" y="68" font-family="Arial, sans-serif" font-size="55" font-weight="bold" fill="white" text-anchor="middle">€</text>
+  <!-- Small Bulgarian flag colors accent -->
+  <rect x="10" y="85" width="26" height="4" rx="2" fill="white"/>
+  <rect x="37" y="85" width="26" height="4" rx="2" fill="#00966E"/>
+  <rect x="64" y="85" width="26" height="4" rx="2" fill="#D62828"/>
+</svg>
+

@@ -1,0 +1,21 @@
+{
+  "name": "Ресто Калкулатор - Евро и Лева",
+  "short_name": "Ресто Калкулатор",
+  "description": "Изчислете лесно колко ресто в евро трябва да получите, когато плащате в лева",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FEFBF6",
+  "theme_color": "#00966E",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["finance", "utilities"],
+  "lang": "bg"
+}
+
