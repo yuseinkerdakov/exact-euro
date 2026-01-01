@@ -7,4 +7,3 @@ export {
   formatAmount,
   parseAmount,
 } from './currency'
-

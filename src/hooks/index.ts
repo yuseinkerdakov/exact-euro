@@ -4,4 +4,3 @@ export type {
   ChangeResult,
   UseChangeCalculatorReturn,
 } from './useChangeCalculator'
-

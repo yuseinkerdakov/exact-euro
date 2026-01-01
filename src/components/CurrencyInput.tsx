@@ -1,34 +1,25 @@
-import { useId, useRef, useEffect } from 'react'
+import { useId, useRef, useEffect, type ChangeEvent } from 'react'
 import {
   CURRENCY_SYMBOLS,
   CURRENCY_NAMES,
   Currency,
   type CurrencyType,
 } from '../constants/exchange'
+import { SwapIcon } from './icons'
+
+const AMOUNT_PATTERN = /^[0-9]*[.,]?[0-9]*$/
 
 export interface CurrencyInputProps {
-  /** The label text displayed above the input */
   label: string
-  /** Current input value */
   value: string
-  /** Callback when input value changes */
   onChange: (value: string) => void
-  /** Currently selected currency */
   currency: CurrencyType
-  /** Callback to toggle between currencies */
   onCurrencyToggle: () => void
-  /** Placeholder text */
   placeholder?: string
-  /** Whether to auto-focus this input */
   autoFocus?: boolean
-  /** Test ID for testing */
   testId?: string
 }
 
-/**
- * A currency input component with an integrated currency toggle button.
- * Designed for accessibility and ease of use for all ages.
- */
 export function CurrencyInput({
   label,
   value,
@@ -43,15 +34,14 @@ export function CurrencyInput({
   const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
-    if (autoFocus && inputRef.current) {
-      inputRef.current.focus()
+    if (autoFocus) {
+      inputRef.current?.focus()
     }
   }, [autoFocus])
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value
-    // Allow only numbers, dots, and commas
-    if (/^[0-9]*[.,]?[0-9]*$/.test(newValue) || newValue === '') {
+    if (newValue === '' || AMOUNT_PATTERN.test(newValue)) {
       onChange(newValue)
     }
   }
@@ -71,14 +61,12 @@ export function CurrencyInput({
       </label>
 
       <div className="relative flex items-stretch">
-        {/* Currency Symbol Indicator */}
         <div className="flex items-center justify-center w-11 sm:w-14 shrink-0 bg-border rounded-l-xl border-2 border-r-0 border-border">
           <span className="text-lg sm:text-xl font-semibold text-text-primary">
             {symbol}
           </span>
         </div>
 
-        {/* Input Field */}
         <input
           ref={inputRef}
           id={inputId}
@@ -95,7 +83,6 @@ export function CurrencyInput({
           data-testid={testId ? `${testId}-input` : undefined}
         />
 
-        {/* Currency Toggle Button */}
         <button
           type="button"
           onClick={onCurrencyToggle}
@@ -109,19 +96,7 @@ export function CurrencyInput({
           <span className="text-xs sm:text-sm font-bold text-lev-green tracking-wide whitespace-nowrap">
             {currencyName.toUpperCase()}
           </span>
-          <svg
-            className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-text-secondary shrink-0"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"
-            />
-          </svg>
+          <SwapIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-text-secondary shrink-0" />
         </button>
       </div>
     </div>
