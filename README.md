@@ -1,4 +1,4 @@
-# 🇧🇬 🇪🇺 Ресто Калкулатор
+# 🇧🇬 🇪🇺 Change calculator to help people during Bulgaria's dual currency period in the transition to the EURO
 
 A simple calculator to help Bulgarians during the Euro transition period. When you pay in Leva but receive change in Euro, this app tells you exactly how much you should get back.
 
