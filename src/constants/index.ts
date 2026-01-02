@@ -5,5 +5,3 @@ export {
   CURRENCY_NAMES,
   type CurrencyType,
 } from './exchange'
-
-

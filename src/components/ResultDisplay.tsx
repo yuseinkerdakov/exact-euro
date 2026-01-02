@@ -127,17 +127,8 @@ export function ResultDisplay({
   hasValidInputs,
   testId,
 }: ResultDisplayProps) {
-  if (!hasValidInputs) {
-    return <EmptyState testId={testId} />
-  }
-
-  if (result === null) {
-    return <InsufficientPayment testId={testId} />
-  }
-
-  if (result.eur === 0) {
-    return <ExactPayment testId={testId} />
-  }
-
+  if (!hasValidInputs) return <EmptyState testId={testId} />
+  if (result === null) return <InsufficientPayment testId={testId} />
+  if (result.eur === 0) return <ExactPayment testId={testId} />
   return <ChangeDisplay result={result} testId={testId} />
 }

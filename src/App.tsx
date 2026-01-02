@@ -4,11 +4,11 @@ import {
   CurrencyInput,
   ResultDisplay,
   ResetButton,
-} from './components';
-import { useChangeCalculator } from './hooks/useChangeCalculator';
-import { EXCHANGE_RATE } from './constants/exchange';
-import { Analytics } from "@vercel/analytics/react";
-import './App.css';
+} from './components'
+import { useChangeCalculator } from './hooks/useChangeCalculator'
+import { EXCHANGE_RATE } from './constants/exchange'
+import { Analytics } from '@vercel/analytics/react'
+import './App.css'
 
 export default function App() {
   const {

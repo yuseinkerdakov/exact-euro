@@ -77,5 +77,3 @@ export function CheckCircleIcon(props: IconProps) {
     </svg>
   )
 }
-
-

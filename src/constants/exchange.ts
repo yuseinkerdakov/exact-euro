@@ -1,7 +1,7 @@
 /**
  * Official fixed exchange rate for Bulgaria's Euro adoption
  * 1 EUR = 1.95583 BGN (Bulgarian Lev)
- * 
+ *
  * This rate was set by the European Council and is irrevocable.
  * Source: https://ec.europa.eu/info/business-economy-euro/euro-area/enlargement-euro-area/bulgaria_en
  */
@@ -32,4 +32,3 @@ export const CURRENCY_NAMES: Record<CurrencyType, string> = {
   EUR: 'Евро',
   BGN: 'Лева',
 }
-

@@ -76,7 +76,6 @@ const initialState: ChangeCalculatorState = {
 export function useChangeCalculator(): UseChangeCalculatorReturn {
   const [state, setState] = useState<ChangeCalculatorState>(initialState)
 
-  // Parse input values
   const priceValue = useMemo(
     () => parseAmount(state.priceInput),
     [state.priceInput]
@@ -87,7 +86,6 @@ export function useChangeCalculator(): UseChangeCalculatorReturn {
     [state.paidInput]
   )
 
-  // Convert to EUR for calculations
   const priceInEur = useMemo(
     () => toEur(priceValue, state.priceCurrency),
     [priceValue, state.priceCurrency]
@@ -111,11 +109,9 @@ export function useChangeCalculator(): UseChangeCalculatorReturn {
     [priceValue, state.priceCurrency, paidValue, state.paidCurrency]
   )
 
-  // Derived states
   const isPaymentSufficient = changeResult !== null
   const hasValidInputs = priceValue > 0 && paidValue > 0
 
-  // Action handlers
   const setPriceInput = useCallback((value: string) => {
     setState((prev) => ({ ...prev, priceInput: value }))
   }, [])
@@ -170,5 +166,3 @@ export function useChangeCalculator(): UseChangeCalculatorReturn {
     reset,
   }
 }
-
-

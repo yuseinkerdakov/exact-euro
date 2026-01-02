@@ -27,9 +27,7 @@ function roundToCents(value: Decimal): number {
  * @returns Amount in Euro, rounded to 2 decimal places
  */
 export function bgnToEur(bgn: number): number {
-  if (!isFinite(bgn) || isNaN(bgn)) {
-    return 0;
-  }
+  if (!isFinite(bgn) || isNaN(bgn)) return 0;
   const bgnDecimal = new Decimal(bgn);
   return roundToCents(bgnDecimal.dividedBy(RATE));
 }
@@ -50,9 +48,7 @@ function eurToBgnDecimal(eurDecimal: Decimal): Decimal {
  * @returns Amount in Bulgarian Lev, rounded to 2 decimal places
  */
 export function eurToBgn(eur: number): number {
-  if (!isFinite(eur) || isNaN(eur)) {
-    return 0;
-  }
+  if (!isFinite(eur) || isNaN(eur)) return 0;
   const eurDecimal = new Decimal(eur);
   return eurToBgnDecimal(eurDecimal).toNumber();
 }
@@ -65,12 +61,8 @@ export function eurToBgn(eur: number): number {
  * @returns Amount in Euro
  */
 export function toEur(amount: number, fromCurrency: CurrencyType): number {
-  if (!isFinite(amount) || isNaN(amount)) {
-    return 0;
-  }
-  if (fromCurrency === Currency.EUR) {
-    return roundToCents(new Decimal(amount));
-  }
+  if (!isFinite(amount) || isNaN(amount)) return 0;
+  if (fromCurrency === Currency.EUR) return roundToCents(new Decimal(amount));
   return bgnToEur(amount);
 }
 
@@ -82,12 +74,8 @@ export function toEur(amount: number, fromCurrency: CurrencyType): number {
  * @returns Amount in Bulgarian Lev
  */
 export function toBgn(amount: number, fromCurrency: CurrencyType): number {
-  if (!isFinite(amount) || isNaN(amount)) {
-    return 0;
-  }
-  if (fromCurrency === Currency.BGN) {
-    return roundToCents(new Decimal(amount));
-  }
+  if (!isFinite(amount) || isNaN(amount)) return 0;
+  if (fromCurrency === Currency.BGN) return roundToCents(new Decimal(amount));
   return eurToBgn(amount);
 }
 
@@ -107,12 +95,12 @@ export function calculateChange(
   const paid = new Decimal(paidInEur);
   const changeInEur = paid.minus(price);
 
-  if (changeInEur.isNegative()) {
-    return null;
-  }
+  if (changeInEur.isNegative()) return null;
 
-  // Round EUR first, then convert to BGN - keeping everything in Decimal
-  const roundedEurChange = changeInEur.toDecimalPlaces(2, Decimal.ROUND_HALF_UP);
+  const roundedEurChange = changeInEur.toDecimalPlaces(
+    2,
+    Decimal.ROUND_HALF_UP
+  );
 
   return {
     eur: roundedEurChange.toNumber(),
@@ -142,10 +130,7 @@ export function calculateChangeWithCurrencies(
   // If both amounts are in the same currency, calculate directly
   if (priceCurrency === paidCurrency) {
     const change = paidDecimal.minus(priceDecimal);
-
-    if (change.isNegative()) {
-      return null;
-    }
+    if (change.isNegative()) return null;
 
     const roundedChange = change.toDecimalPlaces(2, Decimal.ROUND_HALF_UP);
 
@@ -154,14 +139,14 @@ export function calculateChangeWithCurrencies(
         eur: roundedChange.toNumber(),
         bgn: eurToBgnDecimal(roundedChange).toNumber(),
       };
-    } else {
-      // Both in BGN - calculate BGN directly, then convert to EUR
-      const bgnChange = roundedChange.toNumber();
-      return {
-        eur: bgnToEur(bgnChange),
-        bgn: bgnChange,
-      };
     }
+
+    // Both in BGN - calculate BGN directly, then convert to EUR
+    const bgnChange = roundedChange.toNumber();
+    return {
+      eur: bgnToEur(bgnChange),
+      bgn: bgnChange,
+    };
   }
 
   // Different currencies - convert to EUR and calculate
@@ -174,11 +159,12 @@ export function calculateChangeWithCurrencies(
 
   const changeInEur = paidInEur.minus(priceInEur);
 
-  if (changeInEur.isNegative()) {
-    return null;
-  }
+  if (changeInEur.isNegative()) return null;
 
-  const roundedEurChange = changeInEur.toDecimalPlaces(2, Decimal.ROUND_HALF_UP);
+  const roundedEurChange = changeInEur.toDecimalPlaces(
+    2,
+    Decimal.ROUND_HALF_UP
+  );
 
   return {
     eur: roundedEurChange.toNumber(),
@@ -194,9 +180,7 @@ export function calculateChangeWithCurrencies(
  * @returns Formatted string
  */
 export function formatAmount(amount: number, decimals: number = 2): string {
-  if (!isFinite(amount) || isNaN(amount)) {
-    return "0.00";
-  }
+  if (!isFinite(amount) || isNaN(amount)) return "0.00";
   return new Decimal(amount).toFixed(decimals);
 }
 
@@ -207,18 +191,14 @@ export function formatAmount(amount: number, decimals: number = 2): string {
  * @returns Parsed number or 0 if invalid
  */
 export function parseAmount(input: string): number {
-  if (!input || input.trim() === "") {
-    return 0;
-  }
+  if (!input || input.trim() === "") return 0;
 
   // Replace comma with dot for European format support and trim whitespace
   const normalized = input.trim().replace(",", ".");
 
   try {
     const decimal = new Decimal(normalized);
-    if (!decimal.isFinite()) {
-      return 0;
-    }
+    if (!decimal.isFinite()) return 0;
     return Math.max(0, decimal.toNumber());
   } catch {
     return 0;

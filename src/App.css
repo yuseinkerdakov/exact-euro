@@ -60,7 +60,7 @@ input:focus-visible {
   input[type="text"] {
     font-size: 16px !important;
   }
-  
+
   @media (min-width: 640px) {
     input[type="text"] {
       font-size: inherit !important;
@@ -73,13 +73,13 @@ input:focus-visible {
   body {
     background: white;
   }
-  
+
   header,
   footer,
   button {
     display: none;
   }
-  
+
   [data-testid="result"] {
     border: 2px solid #000;
     padding: 20px;
@@ -96,5 +96,4 @@ input:focus-visible {
     transition-duration: 0.01ms !important;
   }
 }
-
 

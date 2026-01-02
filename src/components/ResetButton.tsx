@@ -21,5 +21,3 @@ export function ResetButton({ onClick }: ResetButtonProps) {
     </div>
   )
 }
-
-
