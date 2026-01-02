@@ -11,7 +11,7 @@ From January 1, 2026, Bulgaria uses the Euro. During the transition:
 - You can **pay** in both € and leva
 - You get **change only in Euro**
 
-This creates confusion: _"I paid 20 leva for an 8€ coffee... how much Euro change?"_
+This creates confusion: _"I paid 20 leva for an €8 coffee... how much Euro change?"_
 
 ## Usage
 
