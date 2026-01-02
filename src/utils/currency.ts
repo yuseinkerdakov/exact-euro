@@ -1,8 +1,23 @@
+import Decimal from "decimal.js";
 import {
   EXCHANGE_RATE,
   type CurrencyType,
   Currency,
 } from "../constants/exchange";
+
+// Configure Decimal.js for currency calculations
+// We use more precision internally and round to 2 decimal places for output
+Decimal.set({ precision: 20, rounding: Decimal.ROUND_HALF_UP });
+
+// Store exchange rate as Decimal for precise calculations
+const RATE = new Decimal(EXCHANGE_RATE);
+
+/**
+ * Rounds a Decimal to 2 decimal places and returns a number
+ */
+function roundToCents(value: Decimal): number {
+  return value.toDecimalPlaces(2, Decimal.ROUND_HALF_UP).toNumber();
+}
 
 /**
  * Converts Bulgarian Lev (BGN) to Euro (EUR)
@@ -15,7 +30,16 @@ export function bgnToEur(bgn: number): number {
   if (!isFinite(bgn) || isNaN(bgn)) {
     return 0;
   }
-  return Math.round((bgn / EXCHANGE_RATE) * 100) / 100;
+  const bgnDecimal = new Decimal(bgn);
+  return roundToCents(bgnDecimal.dividedBy(RATE));
+}
+
+/**
+ * Internal function to convert EUR Decimal to BGN Decimal
+ * Keeps precision throughout the calculation
+ */
+function eurToBgnDecimal(eurDecimal: Decimal): Decimal {
+  return eurDecimal.times(RATE).toDecimalPlaces(2, Decimal.ROUND_HALF_UP);
 }
 
 /**
@@ -29,7 +53,8 @@ export function eurToBgn(eur: number): number {
   if (!isFinite(eur) || isNaN(eur)) {
     return 0;
   }
-  return Math.round(eur * EXCHANGE_RATE * 100) / 100;
+  const eurDecimal = new Decimal(eur);
+  return eurToBgnDecimal(eurDecimal).toNumber();
 }
 
 /**
@@ -40,8 +65,11 @@ export function eurToBgn(eur: number): number {
  * @returns Amount in Euro
  */
 export function toEur(amount: number, fromCurrency: CurrencyType): number {
+  if (!isFinite(amount) || isNaN(amount)) {
+    return 0;
+  }
   if (fromCurrency === Currency.EUR) {
-    return Math.round(amount * 100) / 100;
+    return roundToCents(new Decimal(amount));
   }
   return bgnToEur(amount);
 }
@@ -54,14 +82,18 @@ export function toEur(amount: number, fromCurrency: CurrencyType): number {
  * @returns Amount in Bulgarian Lev
  */
 export function toBgn(amount: number, fromCurrency: CurrencyType): number {
+  if (!isFinite(amount) || isNaN(amount)) {
+    return 0;
+  }
   if (fromCurrency === Currency.BGN) {
-    return Math.round(amount * 100) / 100;
+    return roundToCents(new Decimal(amount));
   }
   return eurToBgn(amount);
 }
 
 /**
  * Calculates the change to be returned
+ * Uses Decimal.js for precise arithmetic to avoid floating-point errors
  *
  * @param priceInEur - The total price in Euro
  * @param paidInEur - The amount paid in Euro
@@ -71,15 +103,86 @@ export function calculateChange(
   priceInEur: number,
   paidInEur: number
 ): { eur: number; bgn: number } | null {
-  const changeInEur = Math.round((paidInEur - priceInEur) * 100) / 100;
+  const price = new Decimal(priceInEur);
+  const paid = new Decimal(paidInEur);
+  const changeInEur = paid.minus(price);
 
-  if (changeInEur < 0) {
+  if (changeInEur.isNegative()) {
     return null;
   }
 
+  // Round EUR first, then convert to BGN - keeping everything in Decimal
+  const roundedEurChange = changeInEur.toDecimalPlaces(2, Decimal.ROUND_HALF_UP);
+
   return {
-    eur: changeInEur,
-    bgn: eurToBgn(changeInEur),
+    eur: roundedEurChange.toNumber(),
+    bgn: eurToBgnDecimal(roundedEurChange).toNumber(),
+  };
+}
+
+/**
+ * Smart change calculation that handles same-currency scenarios directly
+ * This avoids unnecessary conversion round-trips that can cause precision issues
+ *
+ * @param price - The price amount
+ * @param priceCurrency - Currency of the price
+ * @param paid - The amount paid
+ * @param paidCurrency - Currency of the paid amount
+ * @returns Object with change in both currencies, or null if payment is insufficient
+ */
+export function calculateChangeWithCurrencies(
+  price: number,
+  priceCurrency: CurrencyType,
+  paid: number,
+  paidCurrency: CurrencyType
+): { eur: number; bgn: number } | null {
+  const priceDecimal = new Decimal(price);
+  const paidDecimal = new Decimal(paid);
+
+  // If both amounts are in the same currency, calculate directly
+  if (priceCurrency === paidCurrency) {
+    const change = paidDecimal.minus(priceDecimal);
+
+    if (change.isNegative()) {
+      return null;
+    }
+
+    const roundedChange = change.toDecimalPlaces(2, Decimal.ROUND_HALF_UP);
+
+    if (priceCurrency === Currency.EUR) {
+      return {
+        eur: roundedChange.toNumber(),
+        bgn: eurToBgnDecimal(roundedChange).toNumber(),
+      };
+    } else {
+      // Both in BGN - calculate BGN directly, then convert to EUR
+      const bgnChange = roundedChange.toNumber();
+      return {
+        eur: bgnToEur(bgnChange),
+        bgn: bgnChange,
+      };
+    }
+  }
+
+  // Different currencies - convert to EUR and calculate
+  const priceInEur =
+    priceCurrency === Currency.EUR
+      ? priceDecimal
+      : priceDecimal.dividedBy(RATE);
+  const paidInEur =
+    paidCurrency === Currency.EUR ? paidDecimal : paidDecimal.dividedBy(RATE);
+
+  const changeInEur = paidInEur.minus(priceInEur);
+
+  if (changeInEur.isNegative()) {
+    return null;
+  }
+
+  const roundedEurChange = changeInEur.toDecimalPlaces(2, Decimal.ROUND_HALF_UP);
+
+  return {
+    eur: roundedEurChange.toNumber(),
+    bgn: eurToBgnDecimal(roundedEurChange).toNumber(),
   };
 }
 
@@ -94,7 +197,7 @@ export function formatAmount(amount: number, decimals: number = 2): string {
   if (!isFinite(amount) || isNaN(amount)) {
     return "0.00";
   }
-  return amount.toFixed(decimals);
+  return new Decimal(amount).toFixed(decimals);
 }
 
 /**
@@ -108,14 +211,16 @@ export function parseAmount(input: string): number {
     return 0;
   }
 
-  // Replace comma with dot for European format support
-  const normalized = input.replace(",", ".");
-  const parsed = parseFloat(normalized);
+  // Replace comma with dot for European format support and trim whitespace
+  const normalized = input.trim().replace(",", ".");
 
-  if (isNaN(parsed) || !isFinite(parsed)) {
+  try {
+    const decimal = new Decimal(normalized);
+    if (!decimal.isFinite()) {
+      return 0;
+    }
+    return Math.max(0, decimal.toNumber());
+  } catch {
     return 0;
   }
-
-  return Math.max(0, parsed);
 }
-

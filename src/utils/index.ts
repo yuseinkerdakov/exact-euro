@@ -4,6 +4,7 @@ export {
   toEur,
   toBgn,
   calculateChange,
+  calculateChangeWithCurrencies,
   formatAmount,
   parseAmount,
 } from './currency'

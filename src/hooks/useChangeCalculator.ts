@@ -1,6 +1,10 @@
 import { useState, useMemo, useCallback } from 'react'
 import { Currency, type CurrencyType } from '../constants/exchange'
-import { toEur, calculateChange, parseAmount } from '../utils/currency'
+import {
+  toEur,
+  calculateChangeWithCurrencies,
+  parseAmount,
+} from '../utils/currency'
 
 export interface ChangeCalculatorState {
   /** Raw input value for the price field */
@@ -94,10 +98,17 @@ export function useChangeCalculator(): UseChangeCalculatorReturn {
     [paidValue, state.paidCurrency]
   )
 
-  // Calculate change
+  // Calculate change using smart currency-aware calculation
+  // This avoids precision issues when both amounts are in the same currency
   const changeResult = useMemo(
-    () => calculateChange(priceInEur, paidInEur),
-    [priceInEur, paidInEur]
+    () =>
+      calculateChangeWithCurrencies(
+        priceValue,
+        state.priceCurrency,
+        paidValue,
+        state.paidCurrency
+      ),
+    [priceValue, state.priceCurrency, paidValue, state.paidCurrency]
   )
 
   // Derived states
